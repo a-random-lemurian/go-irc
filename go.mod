@@ -1,4 +1,4 @@
-module gopkg.in/irc.v4
+module github.com/a-random-lemurian/go-irc
 
 go 1.13
 
