@@ -33,4 +33,4 @@ linters-settings:
   govet:
     check-shadowing: true
   gci:
-    local-prefixes: gopkg.in/irc.v4
+    local-prefixes: github.com/a-random-lemurian/go-irc

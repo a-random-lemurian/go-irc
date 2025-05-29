@@ -11,7 +11,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"gopkg.in/irc.v4"
+	"github.com/a-random-lemurian/go-irc"
 )
 
 type TestHandler struct {

@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 	yaml "gopkg.in/yaml.v2"
 
-	"gopkg.in/irc.v4"
+	"github.com/a-random-lemurian/go-irc"
 )
 
 func BenchmarkParseMessage(b *testing.B) {

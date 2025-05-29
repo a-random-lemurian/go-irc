@@ -1,6 +1,6 @@
 # go-irc
 
-[![GoDoc](https://img.shields.io/badge/doc-GoDoc-blue.svg)](https://pkg.go.dev/gopkg.in/irc.v4)
+[![GoDoc](https://img.shields.io/badge/doc-GoDoc-blue.svg)](https://pkg.go.dev/github.com/a-random-lemurian/go-irc)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/go-irc/irc/ci.yml?branch=master)](https://github.com/go-irc/irc/actions)
 [![Coverage Status](https://img.shields.io/coveralls/github/go-irc/irc.svg)](https://coveralls.io/github/go-irc/irc?branch=master)
 
@@ -18,7 +18,7 @@ This packages uses newer error handling APIs so, only go 1.13+ is officially sup
 
 All development happens on the `master` branch and when features are considered stable enough, a new release will be tagged.
 
-* `gopkg.in/irc.v4` should be used to develop against the commits tagged as stable
+* `github.com/a-random-lemurian/go-irc` should be used to develop against the commits tagged as stable
 
 ## Development
 

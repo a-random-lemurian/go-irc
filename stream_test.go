@@ -9,7 +9,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"gopkg.in/irc.v4"
+	"github.com/a-random-lemurian/go-irc"
 )
 
 // TestAction is used to execute an action during a stream test. If a
