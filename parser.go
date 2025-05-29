@@ -223,6 +223,11 @@ type Message struct {
 
 	// Params are all the arguments for the command.
 	Params []string
+
+	// Lemurian modification
+	//
+	// We should always return the original string under the hood
+	original string
 }
 
 // MustParseMessage calls ParseMessage and either returns the message
@@ -351,6 +356,14 @@ func (m *Message) Copy() *Message {
 
 // String ensures this is stringable.
 func (m *Message) String() string {
+
+	// If this IRC message struct was instantiated by parsing, return the exact same message.
+	//
+	// This prevents tag order from randomly changing between multiple parsings of the same message.
+	if m.original != "" {
+		return m.original
+	}
+
 	buf := &bytes.Buffer{}
 
 	// Write any IRCv3 tags if they exist in the message

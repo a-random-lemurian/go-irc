@@ -275,3 +275,27 @@ func TestUserhostSplit(t *testing.T) {
 		)
 	}
 }
+
+func TestOriginallyParsedMessage(t *testing.T) {
+	t.Parallel()
+
+	original := "@is-cat=1;is-dog=0 :lemuria!lemuria@lemuria.ph PRIVMSG #lemuria meow"
+	m := irc.MustParseMessage(original)
+	assert.EqualValues(t, original, m.String())
+}
+
+func TestNotOriginallyParsedMessage(t *testing.T) {
+	t.Parallel()
+
+	newM := irc.Message{
+		Tags: irc.Tags{"is-cat": "1", "is-dog": "0"},
+		Prefix: &irc.Prefix{
+			Name: "lemuria",
+			User: "lemuria",
+			Host: "lemuria.ph",
+		},
+		Command: "PRIVMSG",
+		Params:  []string{"#lemuria", "meow"},
+	}
+	assert.NotEqualValues(t, newM.String(), "")
+}
