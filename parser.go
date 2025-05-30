@@ -3,6 +3,7 @@ package irc
 import (
 	"bytes"
 	"errors"
+	"reflect"
 	"strings"
 )
 
@@ -226,8 +227,8 @@ type Message struct {
 
 	// Lemurian modification
 	//
-	// We should always return the original string under the hood
-	original string
+	// We should always return the originalTags string under the hood
+	originalTags string
 }
 
 // MustParseMessage calls ParseMessage and either returns the message
@@ -253,7 +254,6 @@ func ParseMessage(line string) (*Message, error) { //nolint:funlen
 	c := &Message{
 		Tags:   Tags{},
 		Prefix: &Prefix{},
-		original: line,
 	}
 
 	if line[0] == '@' {
@@ -262,6 +262,7 @@ func ParseMessage(line string) (*Message, error) { //nolint:funlen
 			return nil, ErrMissingDataAfterTags
 		}
 
+		c.originalTags = line[1:loc]
 		c.Tags = ParseTags(line[1:loc])
 		line = line[loc+1:]
 	}
@@ -358,11 +359,12 @@ func (m *Message) Copy() *Message {
 // String ensures this is stringable.
 func (m *Message) String() string {
 
+	tagString := m.Tags.String()
 	// If this IRC message struct was instantiated by parsing, return the exact same message.
 	//
 	// This prevents tag order from randomly changing between multiple parsings of the same message.
-	if m.original != "" {
-		return m.original
+	if reflect.DeepEqual(ParseTags(m.originalTags), m.Tags) {
+		tagString = m.originalTags
 	}
 
 	buf := &bytes.Buffer{}
@@ -370,7 +372,7 @@ func (m *Message) String() string {
 	// Write any IRCv3 tags if they exist in the message
 	if len(m.Tags) > 0 {
 		buf.WriteByte('@')
-		buf.WriteString(m.Tags.String())
+		buf.WriteString(tagString)
 		buf.WriteByte(' ')
 	}
 

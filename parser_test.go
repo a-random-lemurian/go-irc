@@ -12,9 +12,26 @@ import (
 	"github.com/a-random-lemurian/go-irc"
 )
 
+var newM = irc.Message{
+	Tags: irc.Tags{"is-cat": "1", "is-dog": "0"},
+	Prefix: &irc.Prefix{
+		Name: "lemuria",
+		User: "lemuria",
+		Host: "lemuria.ph",
+	},
+	Command: "PRIVMSG",
+	Params:  []string{"#lemuria", "meow"},
+}
+
 func BenchmarkParseMessage(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		irc.MustParseMessage("@tag1=something :nick!user@host PRIVMSG #channel :some message")
+	}
+}
+
+func BenchmarkStringMessage(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_ = newM.String()
 	}
 }
 
@@ -287,15 +304,16 @@ func TestOriginallyParsedMessage(t *testing.T) {
 func TestNotOriginallyParsedMessage(t *testing.T) {
 	t.Parallel()
 
-	newM := irc.Message{
-		Tags: irc.Tags{"is-cat": "1", "is-dog": "0"},
-		Prefix: &irc.Prefix{
-			Name: "lemuria",
-			User: "lemuria",
-			Host: "lemuria.ph",
-		},
-		Command: "PRIVMSG",
-		Params:  []string{"#lemuria", "meow"},
-	}
 	assert.NotEqualValues(t, newM.String(), "")
+}
+
+func TestOriginallyParsedThenEditedMessage(t *testing.T) {
+	t.Parallel()
+
+	original := "@is-cat=1;is-dog=0 :lemuria!lemuria@lemuria.ph PRIVMSG #lemuria meow"
+	m := irc.MustParseMessage(original)
+
+	m.Tags["is-cat-lover"] = "1"
+
+	assert.Contains(t, m.String(), "is-cat-lover=1")
 }
