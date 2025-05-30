@@ -253,6 +253,7 @@ func ParseMessage(line string) (*Message, error) { //nolint:funlen
 	c := &Message{
 		Tags:   Tags{},
 		Prefix: &Prefix{},
+		original: line,
 	}
 
 	if line[0] == '@' {
