@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"reflect"
+	"sort"
 	"strings"
 )
 
@@ -22,6 +23,8 @@ var tagEncodeMap = map[rune]string{
 	'\r': "\\r",
 	'\n': "\\n",
 }
+
+var AlphabetizeTagMaps = false
 
 var (
 	// ErrZeroLengthMessage is returned when parsing if the input is
@@ -129,9 +132,22 @@ func (t Tags) Copy() Tags {
 func (t Tags) String() string {
 	buf := &bytes.Buffer{}
 
-	for k, v := range t {
+	keys := make([]string, len(t))
+	i := 0
+	for k, _ := range t {
+		keys[i] = k
+		i++
+	}
+
+	if AlphabetizeTagMaps {
+		sort.Strings(keys)
+	}
+
+	for _, k := range keys {
 		buf.WriteByte(';')
 		buf.WriteString(k)
+
+		v := t[k]
 		if v != "" {
 			buf.WriteByte('=')
 			buf.WriteString(EncodeTagValue(v))

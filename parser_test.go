@@ -2,8 +2,10 @@ package irc_test
 
 import (
 	"io/ioutil"
+	"math/rand"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -30,6 +32,35 @@ func BenchmarkParseMessage(b *testing.B) {
 }
 
 func BenchmarkStringMessage(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_ = newM.String()
+	}
+}
+
+var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+func RandStringRunes(n int) string {
+    b := make([]rune, n)
+    for i := range b {
+        b[i] = letterRunes[rand.Intn(len(letterRunes))]
+    }
+    return string(b)
+}
+
+func BenchmarkStringMessageAlphabetized(b *testing.B) {
+	b.StopTimer() // we need to warm up the messages for sorting first
+	irc.AlphabetizeTagMaps = true
+
+    rand.Seed(time.Now().UnixNano())
+
+	manyKeys := newM.Copy()
+
+	for i := 0; i < 100; i++ {
+		manyKeys.Tags[RandStringRunes(rand.Intn(18)+3)] = RandStringRunes(rand.Intn(18)+3)
+	}
+
+	b.StartTimer()
+	defer b.StopTimer()
 	for i := 0; i < b.N; i++ {
 		_ = newM.String()
 	}
