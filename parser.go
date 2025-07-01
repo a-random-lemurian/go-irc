@@ -24,7 +24,7 @@ var tagEncodeMap = map[rune]string{
 	'\n': "\\n",
 }
 
-var AlphabetizeTagMaps = false
+var AlphabetizeTagMaps = true
 
 var (
 	// ErrZeroLengthMessage is returned when parsing if the input is
